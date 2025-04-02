@@ -1,62 +1,50 @@
 // app/api/generate-titles/route.js
 
+import { NextResponse } from 'next/server'
+
 export async function POST(req) {
   try {
-    const { title, charLimit } = await req.json();
+    const body = await req.json()
+    const { title, charLimit } = body
 
     if (!title || !charLimit) {
-      return new Response(JSON.stringify({
-        error: 'Missing title or charLimit',
-      }), {
-        status: 400,
-        headers: { 'Content-Type': 'application/json' },
-      });
+      return NextResponse.json(
+        { error: 'Missing title or charLimit' },
+        { status: 400 }
+      )
     }
 
-    // Generate dummy title variations (replace with real GPT logic later)
+    // Dummy variation logic (replace with GPT later)
+    const baseYear = new Date().getFullYear()
     const variations = [
-      `Top ${title} Cards for ${new Date().getFullYear()}`,
+      `Top ${title} Cards for ${baseYear}`,
       `Ultimate Guide to ${title} Credit Cards`,
       `${title} Credit Cards Ranked and Rated`,
       `Best ${title} Rewards for Smart Travelers`,
       `${title} Credit Cards to Consider This Year`,
-      `Hot Picks: ${title} Credit Cards in 2025`,
+      `Hot Picks: ${title} Credit Cards in ${baseYear}`,
       `${title} Options You Can’t Ignore`,
       `What to Know About ${title} Credit Cards`,
       `Expert Picks: ${title} for Rewards`,
-      `Why ${title} Credit Cards Still Rule in 2025`
-    ];
+      `Why ${title} Credit Cards Still Rule in ${baseYear}`
+    ]
 
-    // Format each with score + length
-    const response = variations.map(t => ({
+    const response = variations.map((t) => ({
       title: t,
       length: t.length,
-      score: parseFloat((Math.random() * 4 + 6).toFixed(1)) // Random score 6.0–10.0
-    }));
+      score: parseFloat((Math.random() * 4 + 6).toFixed(1)) // Score 6.0–10.0
+    }))
 
-    // Sort by score (highest first)
-    response.sort((a, b) => b.score - a.score);
-
-    return new Response(JSON.stringify({ titles: response }), {
-      status: 200,
-      headers: { 'Content-Type': 'application/json' },
-    });
-
+    return NextResponse.json({ titles: response })
   } catch (error) {
-    console.error('API Error:', error);
-    return new Response(JSON.stringify({
-      error: 'Internal Server Error',
-    }), {
-      status: 500,
-      headers: { 'Content-Type': 'application/json' },
-    });
+    console.error('API Error:', error)
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    )
   }
 }
 
-// Optional GET handler for testing
 export async function GET() {
-  return new Response(JSON.stringify({ message: 'GET working!' }), {
-    status: 200,
-    headers: { 'Content-Type': 'application/json' },
-  });
+  return NextResponse.json({ message: 'GET working!' })
 }
