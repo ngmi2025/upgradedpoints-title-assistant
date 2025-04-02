@@ -42,3 +42,11 @@ export async function POST(req) {
     )
   }
 }
+// app/api/generate-titles/route.js
+
+export async function GET() {
+  return new Response(JSON.stringify({ message: "GET working!" }), {
+    status: 200,
+    headers: { "Content-Type": "application/json" },
+  });
+}
