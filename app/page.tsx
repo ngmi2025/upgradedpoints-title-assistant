@@ -54,7 +54,7 @@ const handleGenerateTitles = async () => {
   setIsGenerating(true)
 
   try {
-    const response = await fetch("/api/generate-titles", {
+    const res = await fetch("/api/generate-titles", {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -65,24 +65,29 @@ const handleGenerateTitles = async () => {
       }),
     })
 
-    const data = await response.json()
+    const data = await res.json()
 
-    if (response.ok) {
-      const sortedResults = [...data.titles].sort((a, b) => b.score - a.score)
-      setResults(sortedResults)
-      setShowResults(true)
-
-      toast({
-        title: "Titles generated successfully",
-        description: "10 optimized titles have been generated",
-      })
-    } else {
-      throw new Error(data.error || "Failed to generate titles")
+    if (!res.ok) {
+      throw new Error(data.error || "Something went wrong")
     }
-  } catch (error) {
+
+    const formattedResults = data.titles.map((item: { title: string; score: number }) => ({
+      title: item.title,
+      score: item.score,
+    }))
+
+    setResults(formattedResults)
+    setShowResults(true)
+
     toast({
-      title: "Error generating titles",
-      description: (error as Error).message,
+      title: "Titles generated successfully",
+      description: "10 optimized titles have been generated",
+    })
+  } catch (err) {
+    console.error(err)
+    toast({
+      title: "Generation failed",
+      description: (err as Error).message || "There was an error generating titles",
       variant: "destructive",
     })
   } finally {
