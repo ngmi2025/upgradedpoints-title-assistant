@@ -12,11 +12,10 @@ export async function POST(req) {
       )
     }
 
-    // Clean title input
     let cleanedTitle = title
       .replace(/[“”"'\[\]]/g, '')
       .replace(/U\.S\./g, 'US')
-      .replace(/[^ -~]+/g, '') // Remove non-ASCII
+      .replace(/[^ -~]+/g, '')
       .trim()
 
     if (cleanedTitle.length > 90) {
@@ -44,6 +43,8 @@ Score 10: [Score 10]
 `
 
     const apiKey = process.env.OPENAI_API_KEY
+    console.log('Calling OpenAI API with title:', cleanedTitle)
+
     const response = await fetch('https://api.openai.com/v1/chat/completions', {
       method: 'POST',
       headers: {
@@ -53,14 +54,8 @@ Score 10: [Score 10]
       body: JSON.stringify({
         model: 'gpt-4o',
         messages: [
-          {
-            role: 'system',
-            content: 'You are a helpful assistant.',
-          },
-          {
-            role: 'user',
-            content: prompt.replaceAll('${title}', cleanedTitle),
-          },
+          { role: 'system', content: 'You are a helpful assistant.' },
+          { role: 'user', content: prompt.replaceAll('${title}', cleanedTitle) }
         ],
         temperature: 0.7,
         frequency_penalty: 0.3,
@@ -69,6 +64,8 @@ Score 10: [Score 10]
     })
 
     const json = await response.json()
+    console.log('OpenAI raw response:', JSON.stringify(json))
+
     const output = json.choices?.[0]?.message?.content?.trim()
 
     const result = {
@@ -102,7 +99,7 @@ Score 10: [Score 10]
 
     return NextResponse.json({ titles: result.titles })
   } catch (error) {
-    console.error('API Error:', error)
+    console.error('OpenAI API Error:', error)
     return NextResponse.json({ error: 'Internal Server Error' }, { status: 500 })
   }
 }
