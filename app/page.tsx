@@ -301,54 +301,58 @@ export default function TitleOptimizer() {
                           ) : (
                             <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-500">—</span>
                           )}
-                        </TableCell>
                         <TableCell className="text-right">
-                          <div className="flex flex-col gap-2">
-                            <div className="flex items-center gap-2 justify-end">
-                              <Label className="text-xs">Style</Label>
-                              <select
-                                value={result.style || "photorealistic"}
-                                onChange={(e) => {
-                                  const updated = [...results]
-                                  updated[index] = { ...result, style: e.target.value }
-                                  setResults(updated)
-                                }}
-                                className="text-xs border rounded px-2 py-1"
-                              >
-                                <option value="photorealistic">Photorealistic</option>
-                                <option value="illustration">Illustration</option>
-                                <option value="typography">Bold Typography</option>
-                                <option value="minimalist">Minimalist</option>
-                              </select>
-                            </div>
-                            <div className="flex items-center gap-2 justify-end">
-                              <Label className="text-xs">Tone</Label>
-                              <select
-                                value={result.tone || "curiosity"}
-                                onChange={(e) => {
-                                  const updated = [...results]
-                                  updated[index] = { ...result, tone: e.target.value }
-                                  setResults(updated)
-                                }}
-                                className="text-xs border rounded px-2 py-1"
-                              >
-                                <option value="curiosity">Curiosity</option>
-                                <option value="luxury">Luxury</option>
-                                <option value="urgency">Urgency</option>
-                                <option value="surprise">Surprise</option>
-                                <option value="calm">Calm</option>
-                              </select>
-                            </div>
-                            <Button
-                              size="sm"
-                              onClick={() => handleGenerateImage(result.title, result.style, result.tone)}
-                              disabled={!result.title || result.title.includes("Error:")}
-                              className="rounded-full bg-up-charcoal hover:bg-up-charcoal/90 text-white text-xs px-3 py-1 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
-                            >
-                              Generate Image
-                            </Button>
-                          </div>
-                        </TableCell>
+  <div className="flex flex-col gap-2">
+    {/* Hidden Style dropdown */}
+    <div className="flex items-center gap-2 justify-end hidden">
+      <Label className="text-xs">Style</Label>
+      <select
+        value={result.style || "photorealistic"}
+        onChange={(e) => {
+          const updated = [...results]
+          updated[index] = { ...result, style: e.target.value }
+          setResults(updated)
+        }}
+        className="text-xs border rounded px-2 py-1"
+      >
+        <option value="photorealistic">Photorealistic</option>
+        <option value="illustration">Illustration</option>
+        <option value="typography">Bold Typography</option>
+        <option value="minimalist">Minimalist</option>
+      </select>
+    </div>
+
+    {/* Hidden Tone dropdown */}
+    <div className="flex items-center gap-2 justify-end hidden">
+      <Label className="text-xs">Tone</Label>
+      <select
+        value={result.tone || "curiosity"}
+        onChange={(e) => {
+          const updated = [...results]
+          updated[index] = { ...result, tone: e.target.value }
+          setResults(updated)
+        }}
+        className="text-xs border rounded px-2 py-1"
+      >
+        <option value="curiosity">Curiosity</option>
+        <option value="luxury">Luxury</option>
+        <option value="urgency">Urgency</option>
+        <option value="surprise">Surprise</option>
+        <option value="calm">Calm</option>
+      </select>
+    </div>
+
+    {/* Coming Soon button */}
+    <Button
+      size="sm"
+      disabled
+      className="rounded-full bg-gray-200 text-gray-500 text-xs px-3 py-1 h-auto cursor-not-allowed"
+    >
+      Coming soon
+    </Button>
+  </div>
+</TableCell>
+
                       </TableRow>
                     ))}
                   </TableBody>
