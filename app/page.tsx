@@ -162,7 +162,6 @@ const handleGenerateTitles = async () => {
     if (score >= 9) return "bg-up-score-high/20 text-up-score-high font-medium"
     if (score >= 7) return "bg-up-score-medium/20 text-up-score-medium font-medium"
     return "bg-up-score-low/20 text-up-score-low font-medium"
-  }
 
   return (
     <div className="min-h-screen flex flex-col">
