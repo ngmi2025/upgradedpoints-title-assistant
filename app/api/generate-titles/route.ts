@@ -114,7 +114,7 @@ Now evaluate this title and rewrite it as requested: "${cleanedTitle}"`
 
       const matches = output.match(/Title \d+:\s*(.*?)\nScore \d+:\s*(\d+)/g)
       if (matches?.length === 10) {
-        matches.forEach((match) => {
+        matches.forEach((match: string) => {
           const titleMatch = match.match(/Title \d+:\s*(.*)/)
           const scoreMatch = match.match(/Score \d+:\s*(\d+)/)
 
