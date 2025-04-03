@@ -29,18 +29,6 @@ export default function TitleOptimizer() {
     }
   }, [results.length])
 
-  const handleGenerateTitles = () => {
-    if (!title.trim()) {
-      toast({
-        title: "Please enter a title",
-        description: "You need to enter a title to generate optimized versions",
-        variant: "destructive",
-      })
-      return
-    }
-
-    setIsGenerating(true)
-
 const handleGenerateTitles = async () => {
   if (!title.trim()) {
     toast({
