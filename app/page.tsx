@@ -1,7 +1,7 @@
 "use client"
 
 import { useState, useEffect } from "react"
-import { Loader2, Download, Search, Clipboard, Check } from "lucide-react"
+import { Loader2, Download, Search, Copy, Check } from "lucide-react"
 import { Button } from "@/components/ui/button"
 import { Label } from "@/components/ui/label"
 import { Input } from "@/components/ui/input"
@@ -265,35 +265,38 @@ function Page() {
                   <TableHeader className="bg-gray-50">
                     <TableRow>
                       <TableHead className="w-[60%] font-medium">Title</TableHead>
-                      <TableHead className="font-medium w-[10%]">Length</TableHead>
-                      <TableHead className="font-medium w-[10%]">Score</TableHead>
-                      <TableHead className="text-right font-medium w-[20%]">Action</TableHead>
+                      <TableHead className="font-medium w-[10%] text-center">Copy</TableHead>
+                      <TableHead className="font-medium w-[10%] text-center">Length</TableHead>
+                      <TableHead className="font-medium w-[10%] text-center">Score</TableHead>
+                      <TableHead className="font-medium w-[20%] text-center">Generate Image</TableHead>
                     </TableRow>
                   </TableHeader>
                   <TableBody>
                     {results.map((result, index) => (
                       <TableRow key={index} className={`border-b hover:bg-gray-50 transition-colors`}>
                         <TableCell className="font-medium py-3">
-                          <div className="flex items-center justify-between">
-                            <div className="pr-2">{result.title || "—"}</div>
-                            {result.title && !result.title.includes("Error:") && (
-                              <button
-                                onClick={() => handleCopyTitle(result.title, index)}
-                                className="p-1 rounded-md text-gray-400 hover:text-up-blue hover:bg-gray-100 transition-colors"
-                                title="Copy Title"
-                              >
-                                {copiedIndex === index ? (
-                                  <Check className="h-4 w-4 text-green-500" />
-                                ) : (
-                                  <Clipboard className="h-4 w-4" />
-                                )}
-                                <span className="sr-only">Copy Title</span>
-                              </button>
-                            )}
-                          </div>
+                          <div className="pr-2">{result.title || "—"}</div>
                         </TableCell>
-                        <TableCell className="text-gray-900">{result.title ? result.title.length : "—"}</TableCell>
-                        <TableCell>
+                        <TableCell className="text-center">
+                          {result.title && !result.title.includes("Error:") && (
+                            <button
+                              onClick={() => handleCopyTitle(result.title, index)}
+                              className="p-1 rounded-md text-gray-400 hover:text-up-blue hover:bg-gray-100 transition-colors inline-flex"
+                              title="Copy Title"
+                            >
+                              {copiedIndex === index ? (
+                                <Check className="h-4 w-4 text-green-500" />
+                              ) : (
+                                <Copy className="h-4 w-4" />
+                              )}
+                              <span className="sr-only">Copy Title</span>
+                            </button>
+                          )}
+                        </TableCell>
+                        <TableCell className="text-center">
+                          {result.title ? result.title.length : "—"}
+                        </TableCell>
+                        <TableCell className="text-center">
                           {result.score !== null ? (
                             <span className={`px-2 py-1 rounded-full text-xs ${getScoreColor(result.score)}`}>
                               {result.score.toFixed(1)}
