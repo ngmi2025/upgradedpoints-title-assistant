@@ -47,23 +47,29 @@ Now evaluate this title and rewrite it as requested: "${cleanedTitle}"
     const apiKey = process.env.OPENAI_API_KEY
     console.log('Calling OpenAI API with title:', cleanedTitle)
 
-    const response = await fetch('https://api.openai.com/v1/chat/completions', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        Authorization: `Bearer ${apiKey}`,
+const response = await fetch('https://api.openai.com/v1/chat/completions', {
+  method: 'POST',
+  headers: {
+    'Content-Type': 'application/json',
+    Authorization: `Bearer ${apiKey}`,
+  },
+  body: JSON.stringify({
+    model: 'gpt-4o',
+    messages: [
+      {
+        role: 'system',
+        content: 'You are an assistant that helps optimize titles for Google Discover. Follow all formatting and length instructions strictly.',
       },
-      body: JSON.stringify({
-        model: 'gpt-4o',
-        messages: [
-          { role: 'system', content: 'You are a helpful assistant.' },
-          { role: 'user', content: prompt.replaceAll('${title}', cleanedTitle) }
-        ],
-        temperature: 0.7,
-        frequency_penalty: 0.3,
-        max_tokens: 700,
-      }),
-    })
+      {
+        role: 'user',
+        content: prompt, // ← prompt must contain the cleaned title injected directly
+      }
+    ],
+    temperature: 0.7,
+    frequency_penalty: 0.3,
+    max_tokens: 700,
+  }),
+})
 
     const json = await response.json()
     console.log('OpenAI raw response:', JSON.stringify(json))
