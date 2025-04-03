@@ -101,10 +101,13 @@ Now evaluate this title and rewrite it as requested: "${cleanedTitle}"`
 
     const output = json.choices?.[0]?.message?.content?.trim()
 
-    const result = {
-      originalScore: 'N/A',
-      titles: [],
-    }
+    const result: {
+  originalScore: string
+  titles: { title: string; score: number }[]
+} = {
+  originalScore: 'N/A',
+  titles: [],
+}
 
     if (output) {
       const originalScoreMatch = output.match(/Original Score:\s*(\d+)/)
