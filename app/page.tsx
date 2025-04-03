@@ -224,20 +224,19 @@ const handleGenerateTitles = async () => {
           {/* Actions Section */}
           <section className="flex flex-wrap gap-3">
             <Button
-              onClick={handleGenerateTitles}
-              disabled={isGenerating}
-              className="min-w-[150px] bg-up-blue hover:bg-up-blue/90 text-white"
-            >
-              {isGenerating ? (
-                <>
-                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-                  Generating...
-                </>
-              ) : (
-                "Generate Titles"
-              )}
-            </Button>
-            <Button
+  variant="outline"
+  onClick={() => {
+    const link = document.createElement("a")
+    link.href = generatedImage
+    link.download = `${selectedTitle.replace(/\s+/g, "_")}.png`
+    link.click()
+  }}
+  className="flex items-center gap-2 border-up-blue text-up-blue hover:bg-up-blue/10"
+>
+  <Download className="h-4 w-4" />
+  Download Image
+</Button>
+
               variant="outline"
               onClick={handleClearResults}
               className="border-up-charcoal/30 text-up-charcoal hover:bg-gray-100"
