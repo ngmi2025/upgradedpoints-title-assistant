@@ -13,7 +13,6 @@ import { Separator } from "@/components/ui/separator"
 import { Sheet, SheetContent } from "@/components/ui/sheet"
 import { Skeleton } from "@/components/ui/skeleton"
 import {
-  Tooltip,
   TooltipContent,
   TooltipProvider,
   TooltipTrigger,
@@ -576,18 +575,18 @@ const SidebarMenuButton = React.forwardRef<
         children: tooltip,
       }
     }
+return (
+  <div role="tooltip">
+    <TooltipTrigger asChild>{button}</TooltipTrigger>
+    <TooltipContent
+      side="right"
+      align="center"
+      hidden={state !== "collapsed" || isMobile}
+      {...tooltip}
+    />
+  </div>
+)
 
-    return (
-      <Tooltip>
-        <TooltipTrigger asChild>{button}</TooltipTrigger>
-        <TooltipContent
-          side="right"
-          align="center"
-          hidden={state !== "collapsed" || isMobile}
-          {...tooltip}
-        />
-      </Tooltip>
-    )
   }
 )
 SidebarMenuButton.displayName = "SidebarMenuButton"
