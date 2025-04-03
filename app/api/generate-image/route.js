@@ -10,9 +10,9 @@ export async function POST(req) {
 
     const apiKey = process.env.OPENAI_API_KEY
 
-    const prompt = `Create a visually engaging, clickbait-style thumbnail image inspired by the following title: "${title}". 
+const prompt = `Create a visually engaging, clickbait-style thumbnail image inspired by the following title: "${title}". 
 The image should be:
-- Optimized for Google Discover (800x400 ratio)
+- Optimized for Google Discover (landscape format, 1792x1024)
 - Eye-catching and designed for mobile screens
 - Use bold colors and minimal text
 - Relate directly to the content of the title (e.g. travel, credit cards, finance, etc.)
