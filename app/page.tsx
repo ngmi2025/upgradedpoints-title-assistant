@@ -91,23 +91,44 @@ const handleGenerateTitles = async () => {
     setShowResults(false)
   }
 
-  const handleGenerateImage = (title: string) => {
-    if (!title || title.includes("Error:")) return
+  const handleGenerateImage = async (title: string) => {
+  if (!title || title.includes("Error:")) return
 
-    setSelectedTitle(title)
-    setIsGeneratingImage(true)
+  setSelectedTitle(title)
+  setIsGeneratingImage(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      setGeneratedImage("/placeholder.svg?height=400&width=800")
-      setIsGeneratingImage(false)
+  try {
+    const res = await fetch("/api/generate-image", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({ title }),
+    })
 
-      toast({
-        title: "Image generated",
-        description: "Image has been generated for the selected title",
-      })
-    }, 2000)
+    const data = await res.json()
+
+    if (!res.ok || !data.imageUrl) {
+      throw new Error(data.error || "Image generation failed")
+    }
+
+    setGeneratedImage(data.imageUrl)
+
+    toast({
+      title: "Image generated",
+      description: "Image has been generated for the selected title",
+    })
+  } catch (err) {
+    console.error(err)
+    toast({
+      title: "Image generation failed",
+      description: (err as Error).message,
+      variant: "destructive",
+    })
+  } finally {
+    setIsGeneratingImage(false)
   }
+}
 
   const handleCopyTitle = (title: string, index: number) => {
     if (!title || title.includes("Error:")) return
