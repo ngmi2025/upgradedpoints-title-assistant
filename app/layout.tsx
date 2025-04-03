@@ -8,6 +8,15 @@ const inter = Inter({
   variable: "--font-inter",
 })
 
+export const metadata = {
+  generator: "v0.dev",
+  title: "UpgradedPoints Title Assistant",
+  description: "Optimize titles for Google Discover.",
+  icons: {
+    icon: "/favicon.png", // Make sure this file exists in /public
+  },
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -22,11 +31,3 @@ export default function RootLayout({
     </html>
   )
 }
-
-
-
-import './globals.css'
-
-export const metadata = {
-      generator: 'v0.dev'
-    };
