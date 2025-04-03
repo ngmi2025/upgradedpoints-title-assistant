@@ -9,12 +9,20 @@ import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { useToast } from "@/hooks/use-toast"
 
+// Add this type definition at the top of the file
+type ResultItem = {
+  title: string
+  score: number | null
+  style?: string
+  tone?: string
+}
+
 export default function TitleOptimizer() {
   const { toast } = useToast()
   const [title, setTitle] = useState("")
   const [characterLimit, setCharacterLimit] = useState("63")
   const [isGenerating, setIsGenerating] = useState(false)
-  const [results, setResults] = useState<Array<{ title: string; score: number | null }>>([])
+  const [results, setResults] = useState<Array<ResultItem>>([])
   const [selectedTitle, setSelectedTitle] = useState("")
   const [isGeneratingImage, setIsGeneratingImage] = useState(false)
   const [generatedImage, setGeneratedImage] = useState("")
@@ -29,59 +37,59 @@ export default function TitleOptimizer() {
     }
   }, [results.length])
 
-const handleGenerateTitles = async () => {
-  if (!title.trim()) {
-    toast({
-      title: "Please enter a title",
-      description: "You need to enter a title to generate optimized versions",
-      variant: "destructive",
-    })
-    return
-  }
-
-  setIsGenerating(true)
-
-  try {
-    const res = await fetch("/api/generate-titles", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({
-        title,
-        charLimit: characterLimit,
-      }),
-    })
-
-    const data = await res.json()
-
-    if (!res.ok) {
-      throw new Error(data.error || "Something went wrong")
+  const handleGenerateTitles = async () => {
+    if (!title.trim()) {
+      toast({
+        title: "Please enter a title",
+        description: "You need to enter a title to generate optimized versions",
+        variant: "destructive",
+      })
+      return
     }
 
-    const formattedResults = data.titles.map((item: { title: string; score: number }) => ({
-      title: item.title,
-      score: item.score,
-    }))
+    setIsGenerating(true)
 
-    setResults(formattedResults)
-    setShowResults(true)
+    try {
+      const res = await fetch("/api/generate-titles", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+          title,
+          charLimit: characterLimit,
+        }),
+      })
 
-    toast({
-      title: "Titles generated successfully",
-      description: "10 optimized titles have been generated",
-    })
-  } catch (err) {
-    console.error(err)
-    toast({
-      title: "Generation failed",
-      description: (err as Error).message || "There was an error generating titles",
-      variant: "destructive",
-    })
-  } finally {
-    setIsGenerating(false)
+      const data = await res.json()
+
+      if (!res.ok) {
+        throw new Error(data.error || "Something went wrong")
+      }
+
+      const formattedResults = data.titles.map((item: { title: string; score: number }) => ({
+        title: item.title,
+        score: item.score,
+      }))
+
+      setResults(formattedResults)
+      setShowResults(true)
+
+      toast({
+        title: "Titles generated successfully",
+        description: "10 optimized titles have been generated",
+      })
+    } catch (err) {
+      console.error(err)
+      toast({
+        title: "Generation failed",
+        description: (err as Error).message || "There was an error generating titles",
+        variant: "destructive",
+      })
+    } finally {
+      setIsGenerating(false)
+    }
   }
-}
 
   const handleClearResults = () => {
     const emptyResults = Array(10).fill({ title: "", score: null })
@@ -91,44 +99,44 @@ const handleGenerateTitles = async () => {
     setShowResults(false)
   }
 
-  const handleGenerateImage = async (title: string) => {
-  if (!title || title.includes("Error:")) return
+  const handleGenerateImage = async (title: string, style?: string, tone?: string) => {
+    if (!title || title.includes("Error:")) return
 
-  setSelectedTitle(title)
-  setIsGeneratingImage(true)
+    setSelectedTitle(title)
+    setIsGeneratingImage(true)
 
-  try {
-    const res = await fetch("/api/generate-image", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ title }),
-    })
+    try {
+      const res = await fetch("/api/generate-image", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ title, style, tone }),
+      })
 
-    const data = await res.json()
+      const data = await res.json()
 
-    if (!res.ok || !data.imageUrl) {
-      throw new Error(data.error || "Image generation failed")
+      if (!res.ok || !data.imageUrl) {
+        throw new Error(data.error || "Image generation failed")
+      }
+
+      setGeneratedImage(data.imageUrl)
+
+      toast({
+        title: "Image generated",
+        description: "Image has been generated for the selected title",
+      })
+    } catch (err) {
+      console.error(err)
+      toast({
+        title: "Image generation failed",
+        description: (err as Error).message,
+        variant: "destructive",
+      })
+    } finally {
+      setIsGeneratingImage(false)
     }
-
-    setGeneratedImage(data.imageUrl)
-
-    toast({
-      title: "Image generated",
-      description: "Image has been generated for the selected title",
-    })
-  } catch (err) {
-    console.error(err)
-    toast({
-      title: "Image generation failed",
-      description: (err as Error).message,
-      variant: "destructive",
-    })
-  } finally {
-    setIsGeneratingImage(false)
   }
-}
 
   const handleCopyTitle = (title: string, index: number) => {
     if (!title || title.includes("Error:")) return
@@ -162,6 +170,7 @@ const handleGenerateTitles = async () => {
     if (score >= 9) return "bg-up-score-high/20 text-up-score-high font-medium"
     if (score >= 7) return "bg-up-score-medium/20 text-up-score-medium font-medium"
     return "bg-up-score-low/20 text-up-score-low font-medium"
+  }
 
   return (
     <div className="min-h-screen flex flex-col">
@@ -223,19 +232,6 @@ const handleGenerateTitles = async () => {
           {/* Actions Section */}
           <section className="flex flex-wrap gap-3">
             <Button
-  variant="outline"
-  onClick={() => {
-    const link = document.createElement("a")
-    link.href = generatedImage
-    link.download = `${selectedTitle.replace(/\s+/g, "_")}.png`
-    link.click()
-  }}
-  className="flex items-center gap-2 border-up-blue text-up-blue hover:bg-up-blue/10"
->
-  <Download className="h-4 w-4" />
-  Download Image
-</Button>
-
               variant="outline"
               onClick={handleClearResults}
               className="border-up-charcoal/30 text-up-charcoal hover:bg-gray-100"
@@ -293,14 +289,51 @@ const handleGenerateTitles = async () => {
                           )}
                         </TableCell>
                         <TableCell className="text-right">
-                          <Button
-                            size="sm"
-                            onClick={() => handleGenerateImage(result.title)}
-                            disabled={!result.title || result.title.includes("Error:")}
-                            className="rounded-full bg-up-charcoal hover:bg-up-charcoal/90 text-white text-xs px-3 py-1 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
-                          >
-                            Generate Image
-                          </Button>
+                          <div className="flex flex-col gap-2">
+                            <div className="flex items-center gap-2 justify-end">
+                              <Label className="text-xs">Style</Label>
+                              <select
+                                value={result.style || "photorealistic"}
+                                onChange={(e) => {
+                                  const updated = [...results]
+                                  updated[index] = { ...result, style: e.target.value }
+                                  setResults(updated)
+                                }}
+                                className="text-xs border rounded px-2 py-1"
+                              >
+                                <option value="photorealistic">Photorealistic</option>
+                                <option value="illustration">Illustration</option>
+                                <option value="typography">Bold Typography</option>
+                                <option value="minimalist">Minimalist</option>
+                              </select>
+                            </div>
+                            <div className="flex items-center gap-2 justify-end">
+                              <Label className="text-xs">Tone</Label>
+                              <select
+                                value={result.tone || "curiosity"}
+                                onChange={(e) => {
+                                  const updated = [...results]
+                                  updated[index] = { ...result, tone: e.target.value }
+                                  setResults(updated)
+                                }}
+                                className="text-xs border rounded px-2 py-1"
+                              >
+                                <option value="curiosity">Curiosity</option>
+                                <option value="luxury">Luxury</option>
+                                <option value="urgency">Urgency</option>
+                                <option value="surprise">Surprise</option>
+                                <option value="calm">Calm</option>
+                              </select>
+                            </div>
+                            <Button
+                              size="sm"
+                              onClick={() => handleGenerateImage(result.title, result.style, result.tone)}
+                              disabled={!result.title || result.title.includes("Error:")}
+                              className="rounded-full bg-up-charcoal hover:bg-up-charcoal/90 text-white text-xs px-3 py-1 h-auto disabled:opacity-50 disabled:cursor-not-allowed"
+                            >
+                              Generate Image
+                            </Button>
+                          </div>
                         </TableCell>
                       </TableRow>
                     ))}
@@ -355,5 +388,4 @@ const handleGenerateTitles = async () => {
       </footer>
     </div>
   )
-}
-
+} 
