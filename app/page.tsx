@@ -17,7 +17,7 @@ type ResultItem = {
   tone?: string
 }
 
-export default function TitleOptimizer() {
+function Page() {
   const { toast } = useToast()
   const [title, setTitle] = useState("")
   const [characterLimit, setCharacterLimit] = useState("63")
@@ -172,14 +172,6 @@ export default function TitleOptimizer() {
     return "bg-up-score-low/20 text-up-score-low font-medium"
   }
 
-export default function Page() {
-  const getScoreColor = (score: number | null) => {
-    if (score === null) return "bg-gray-100 text-gray-500 font-medium"
-    if (score >= 9) return "bg-up-score-high/20 text-up-score-high font-medium"
-    if (score >= 7) return "bg-up-score-medium/20 text-up-score-medium font-medium"
-    return "bg-up-score-low/20 text-up-score-low font-medium"
-  }
-
   return (
     <div className="min-h-screen flex flex-col">
       <header className="border-b bg-white shadow-sm">
@@ -309,58 +301,60 @@ export default function Page() {
                           ) : (
                             <span className="px-2 py-1 rounded-full text-xs bg-gray-100 text-gray-500">—</span>
                           )}
+                        </TableCell>
                         <TableCell className="text-right">
-  <div className="flex flex-col gap-2">
-    {/* Hidden Style dropdown */}
-    <div className="flex items-center gap-2 justify-end hidden">
-      <Label className="text-xs">Style</Label>
-      <select
-        value={result.style || "photorealistic"}
-        onChange={(e) => {
-          const updated = [...results]
-          updated[index] = { ...result, style: e.target.value }
-          setResults(updated)
-        }}
-        className="text-xs border rounded px-2 py-1"
-      >
-        <option value="photorealistic">Photorealistic</option>
-        <option value="illustration">Illustration</option>
-        <option value="typography">Bold Typography</option>
-        <option value="minimalist">Minimalist</option>
-      </select>
-    </div>
+                          <div className="flex flex-col gap-2">
+                            {/* Hidden Style dropdown */}
+                            <div className="hidden">
+                              <div className="flex items-center gap-2 justify-end">
+                                <Label className="text-xs">Style</Label>
+                                <select
+                                  value={result.style || "photorealistic"}
+                                  onChange={(e) => {
+                                    const updated = [...results]
+                                    updated[index] = { ...result, style: e.target.value }
+                                    setResults(updated)
+                                  }}
+                                  className="text-xs border rounded px-2 py-1"
+                                >
+                                  <option value="photorealistic">Photorealistic</option>
+                                  <option value="illustration">Illustration</option>
+                                  <option value="typography">Bold Typography</option>
+                                  <option value="minimalist">Minimalist</option>
+                                </select>
+                              </div>
 
-    {/* Hidden Tone dropdown */}
-    <div className="flex items-center gap-2 justify-end hidden">
-      <Label className="text-xs">Tone</Label>
-      <select
-        value={result.tone || "curiosity"}
-        onChange={(e) => {
-          const updated = [...results]
-          updated[index] = { ...result, tone: e.target.value }
-          setResults(updated)
-        }}
-        className="text-xs border rounded px-2 py-1"
-      >
-        <option value="curiosity">Curiosity</option>
-        <option value="luxury">Luxury</option>
-        <option value="urgency">Urgency</option>
-        <option value="surprise">Surprise</option>
-        <option value="calm">Calm</option>
-      </select>
-    </div>
+                              {/* Hidden Tone dropdown */}
+                              <div className="flex items-center gap-2 justify-end">
+                                <Label className="text-xs">Tone</Label>
+                                <select
+                                  value={result.tone || "curiosity"}
+                                  onChange={(e) => {
+                                    const updated = [...results]
+                                    updated[index] = { ...result, tone: e.target.value }
+                                    setResults(updated)
+                                  }}
+                                  className="text-xs border rounded px-2 py-1"
+                                >
+                                  <option value="curiosity">Curiosity</option>
+                                  <option value="luxury">Luxury</option>
+                                  <option value="urgency">Urgency</option>
+                                  <option value="surprise">Surprise</option>
+                                  <option value="calm">Calm</option>
+                                </select>
+                              </div>
+                            </div>
 
-    {/* Coming Soon button */}
-    <Button
-      size="sm"
-      disabled
-      className="rounded-full bg-gray-200 text-gray-500 text-xs px-3 py-1 h-auto cursor-not-allowed"
-    >
-      Coming soon
-    </Button>
-  </div>
-</TableCell>
-
+                            {/* Coming Soon button */}
+                            <Button
+                              size="sm"
+                              disabled
+                              className="rounded-full bg-gray-200 text-gray-500 text-xs px-3 py-1 h-auto cursor-not-allowed"
+                            >
+                              Coming soon
+                            </Button>
+                          </div>
+                        </TableCell>
                       </TableRow>
                     ))}
                   </TableBody>
@@ -414,4 +408,6 @@ export default function Page() {
       </footer>
     </div>
   )
-} 
+}
+
+export default Page 
