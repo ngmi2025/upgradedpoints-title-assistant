@@ -24,14 +24,13 @@ The image should be:
         'Content-Type': 'application/json',
         Authorization: `Bearer ${apiKey}`,
       },
-      body: JSON.stringify({
-        model: 'dall-e-3',
-        prompt,
-        n: 1,
-        size: '1024x512', // Closest to Google Discover 5:2 aspect
-        quality: 'hd',
-        response_format: 'url',
-      }),
+body: JSON.stringify({
+  model: "dall-e-3",
+  prompt,
+  size: "1792x1024", // ✅ Valid landscape size for Discover
+  quality: "standard",
+  n: 1,
+})
     })
 
     const json = await response.json()
