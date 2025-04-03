@@ -83,8 +83,6 @@ const handleGenerateTitles = async () => {
   }
 }
 
-  }
-
   const handleClearResults = () => {
     const emptyResults = Array(10).fill({ title: "", score: null })
     setResults(emptyResults)
