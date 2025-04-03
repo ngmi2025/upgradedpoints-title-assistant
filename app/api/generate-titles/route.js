@@ -22,7 +22,7 @@ export async function POST(req) {
       cleanedTitle = cleanedTitle.substring(0, 90) + '...'
     }
 
-    const prompt = `
+const prompt = `
 You are an assistant that generates concise, engaging, and informative titles optimized for Google Discover. CRITICAL REQUIREMENT: Each title MUST be between 52 and 63 characters - NO EXCEPTIONS. You must aim to use between 58-63 characters for EVERY title. Shorter titles will be rejected.
 
 For Google Discover optimization, focus on:
@@ -40,6 +40,8 @@ Score 1: [Score 1]
 ...
 Title 10: [Title 10]
 Score 10: [Score 10]
+
+Now evaluate this title and rewrite it as requested: "${cleanedTitle}"
 `
 
     const apiKey = process.env.OPENAI_API_KEY
