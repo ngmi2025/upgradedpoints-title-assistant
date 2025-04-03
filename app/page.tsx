@@ -232,6 +232,20 @@ export default function TitleOptimizer() {
           {/* Actions Section */}
           <section className="flex flex-wrap gap-3">
             <Button
+              onClick={handleGenerateTitles}
+              disabled={isGenerating}
+              className="bg-up-blue hover:bg-up-blue/90 text-white"
+            >
+              {isGenerating ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Generating...
+                </>
+              ) : (
+                'Generate Titles'
+              )}
+            </Button>
+            <Button
               variant="outline"
               onClick={handleClearResults}
               className="border-up-charcoal/30 text-up-charcoal hover:bg-gray-100"
