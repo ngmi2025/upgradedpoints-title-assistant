@@ -41,41 +41,55 @@ export default function TitleOptimizer() {
 
     setIsGenerating(true)
 
-    // Simulate API call
-    setTimeout(() => {
-      // Generate results
-      const mockResults = [
-        { title: `${title} - Best Options for 2025`, score: 9.5 },
-        { title: `Ultimate Guide: ${title.substring(0, 30)}`, score: 8.2 },
-        { title: `Why ${title.substring(0, 40)} Matters in 2025`, score: 7.4 },
-        { title: `Top Picks: ${title.substring(0, 35)}`, score: 6.8 },
-        { title: `${title} - Complete Review`, score: 8.9 },
-        { title: `${title} vs Alternatives: Which is Better?`, score: 7.7 },
-        { title: `${title}: Expert Analysis and Tips`, score: 9.1 },
-        { title: `The Ultimate ${title.substring(0, 25)} Guide`, score: 8.2 }, // Tie score with another
-        { title: "Error: Could not generate title", score: null },
-        { title: "Error: Could not generate title", score: null },
-      ]
+const handleGenerateTitles = async () => {
+  if (!title.trim()) {
+    toast({
+      title: "Please enter a title",
+      description: "You need to enter a title to generate optimized versions",
+      variant: "destructive",
+    })
+    return
+  }
 
-      // Sort results by score (highest to lowest)
-      const sortedResults = [...mockResults].sort((a, b) => {
-        // Handle null scores (place them at the end)
-        if (a.score === null) return 1
-        if (b.score === null) return -1
+  setIsGenerating(true)
 
-        // Sort by score (descending)
-        return b.score - a.score
-      })
+  try {
+    const response = await fetch("/api/generate-titles", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        title,
+        charLimit: characterLimit,
+      }),
+    })
 
+    const data = await response.json()
+
+    if (response.ok) {
+      const sortedResults = [...data.titles].sort((a, b) => b.score - a.score)
       setResults(sortedResults)
-      setIsGenerating(false)
       setShowResults(true)
 
       toast({
         title: "Titles generated successfully",
         description: "10 optimized titles have been generated",
       })
-    }, 1500)
+    } else {
+      throw new Error(data.error || "Failed to generate titles")
+    }
+  } catch (error) {
+    toast({
+      title: "Error generating titles",
+      description: (error as Error).message,
+      variant: "destructive",
+    })
+  } finally {
+    setIsGenerating(false)
+  }
+}
+
   }
 
   const handleClearResults = () => {
